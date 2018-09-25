@@ -4,9 +4,9 @@
 //  - A lista de filmes
 //  - A introdução de cada filme, quando ele for clicado
 
-// FONTE: https://www.selftaughtjs.com/algorithm-sundays-converting-roman-numerals/
 const audio = new Audio('star-wars-intro.mp3');
 
+// FONTE: https://www.selftaughtjs.com/algorithm-sundays-converting-roman-numerals/
 function toRoman(num) {  
   let result = '';
   const decimal = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
@@ -25,7 +25,7 @@ function toRoman(num) {
 $.ajax({
   url: 'https://swapi.co/api/films/',
   dataType: 'json',
-  success: function(resposta) {
+  success: (resposta) => {
     const $ulFilmes = $('#movies ul');
     const $preCrawl = $('.flow pre');
     $ulFilmes.html('');
@@ -42,7 +42,15 @@ $.ajax({
         .html(episode + ': ' + movie.title)
         .appendTo($ulFilmes[0])
         .click((event) => {
-          $preCrawl.html(`${episode}\n${movie.title.toUpperCase()}\n\n${movie.opening_crawl}`);
+          $.ajax({
+            url: $(event.target).data('episode-url'),
+            dataType: 'json',
+            success: (response) => {
+              const episode = 'Episode ' + toRoman(response.episode_id);
+
+              $preCrawl.html(`${episode}\n${response.title.toUpperCase()}\n\n${response.opening_crawl}`);
+            }
+          });
           audio.currentTime = 0;
           audio.play();
         });
