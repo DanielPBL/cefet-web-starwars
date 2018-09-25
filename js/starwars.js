@@ -3,8 +3,8 @@
 // para carregar:
 //  - A lista de filmes
 //  - A introdução de cada filme, quando ele for clicado
-
 const audio = new Audio('star-wars-intro.mp3');
+audio.loop = true;
 
 // FONTE: https://www.selftaughtjs.com/algorithm-sundays-converting-roman-numerals/
 function toRoman(num) {  
@@ -47,12 +47,18 @@ $.ajax({
             dataType: 'json',
             success: (response) => {
               const episode = 'Episode ' + toRoman(response.episode_id);
+              const $preCrawl = $('.flow pre');
+              const $newPre = $preCrawl.clone(true);
 
-              $preCrawl.html(`${episode}\n${response.title.toUpperCase()}\n\n${response.opening_crawl}`);
+              $newPre.html(`${episode}\n${response.title.toUpperCase()}\n\n${response.opening_crawl}`);
+              // reinicia a animação
+              $preCrawl.parent().append($newPre);
+              $preCrawl.remove();
+              // reinicia a música
+              audio.currentTime = 0;
+              audio.play();
             }
           });
-          audio.currentTime = 0;
-          audio.play();
         });
     }
 
