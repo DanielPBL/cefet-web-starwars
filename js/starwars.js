@@ -55,5 +55,7 @@ $.ajax({
           audio.play();
         });
     }
+
+    $('#movies ul li').first().click();
   }
 });
